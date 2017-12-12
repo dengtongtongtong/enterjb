@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"enterbj/models"
 	"errors"
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -25,14 +24,43 @@ func (c *UserdocumentController) URLMapping() {
 	c.Mapping("Delete", c.Delete)
 }
 
+func getUserinfo(c *UserdocumentController) (userinfo *models.Userinfo, err error) {
+	uid := c.Ctx.Input.Param(":uid")
+	userinfo, err = models.GetUserinfoByUId(uid)
+	return userinfo, err
+}
+
+func convertParams2Model(c *UserdocumentController) (userdoc models.Userdocument) {
+	userdoc.Uid = c.Ctx.Input.Param(":uid")
+	return userdoc
+}
+
 // Post ...
-// @Title Post
-// @Description create Userdocument
-// @Param	body		body 	models.Userdocument	true		"body for Userdocument content"
-// @Success 201 {int} models.Userdocument
-// @Failure 403 body is empty
+// @Title Pos
+// @Description 提交/更新档案
+// @Param   uid   path   string   true   "用户ID"
+// @Param   vehicle_brand_type   formdata   string   false   "汽车品牌型号"
+// @Param   car_register_time    formdata   string   false   "车辆注册日期"
+// @Param   car_type   formdata   string   false       "汽车(品牌)类型"
+// @Param   carid   formdata   string  false   "机动车号牌"
+// @Param   engineid   formdata   string  false   "发动机号"
+// @Param   driving_lisence_photo   formdata   sting   false   "行驶证照片"
+// @Param   car_front_photo   formdata   string   false   "车辆正面照片"
+// @Param   driver_name   formdata   string   false   "驾驶员姓名"
+// @Param   driving_lisence   formdata   string   false   "驾照号"
+// @Success 200 {int} models.Userdocument
+// @Failure 404 body is empty
 // @router /:uid [post]
 func (c *UserdocumentController) Post() {
+	var err error
+	_, err = getUserinfo(c)
+	if err != nil {
+		c.Data["json"] = "abc"
+		return
+	}
+	userdocmodel := convertParams2Model(c)
+	_ = models.UpdateOrInsertUserdocument(&userdocmodel)
+
 	//baseidr := "/Users/dengtongtong/workspace/golangworkspace/src/enterbj"
 	//filepath := fileutils.MakeTempFilePath(baseidr)
 	//fmt.Println("filepath", filepath)
@@ -40,13 +68,12 @@ func (c *UserdocumentController) Post() {
 	// imgfile, _, _ := c.GetFile("imgdata")
 
 	//c.SaveToFile("imgdata", filepath)
-
 	// c.GetFile
-	var v models.Userdocument
-	fmt.Println(v)
-	fmt.Println(c.Ctx.Input.Data())
-	json.Unmarshal(c.Ctx.Input.RequestBody, &v)
-	fmt.Println(v)
+	// var v models.Userdocument
+	// fmt.Println(v)
+	// fmt.Println(c.Ctx.Input.Data())
+	// json.Unmarshal(c.Ctx.Input.RequestBody, &v)
+	// fmt.Println(v)
 	// if _, err := models.AddUserdocument(&v); err == nil {
 	// c.Ctx.Output.SetStatus(201)
 	// c.Data["json"] = v

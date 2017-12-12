@@ -11,7 +11,7 @@ import (
 
 type Userdocument struct {
 	Id int64 `orm:"auto"`
-	// 用户提交的文档IDx
+	// 用户提交的文档ID
 	Did string `orm:"size(128);column(documentid)"`
 	// 用户ID
 	Uid string `orm:"size(128);column(uid)"`
@@ -25,10 +25,10 @@ type Userdocument struct {
 	CarID string `orm:"size(128);column(carid)"`
 	// 发动机号
 	EngineID string `orm:"size(128);column(engineid)"`
-	// 行驶证照片存放
+	// 行驶证照片
 	DrivingLisencePhotoPath string `orm:"size(128);column(driving_lisence_photo_path)"`
 	// 车辆正面照片
-	CarFrontPhotoPath string `orm:"size(128);column(car_front_poto_path)"`
+	CarFrontPhotoPath string `orm:"size(128);column(car_front_photo_path)"`
 	// 驾驶员姓名
 	DriverName string `orm:"size(128);column(driver_name)"`
 	// 驾照号
@@ -159,5 +159,9 @@ func DeleteUserdocument(id int64) (err error) {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}
+	return
+}
+
+func UpdateOrInsertUserdocument(m *Userdocument) (err error) {
 	return
 }
