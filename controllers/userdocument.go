@@ -5,7 +5,6 @@ import (
 	"enterbj/models"
 	"errors"
 	"fmt"
-	"gocommon/fileutils"
 	"strconv"
 	"strings"
 
@@ -32,20 +31,27 @@ func (c *UserdocumentController) URLMapping() {
 // @Param	body		body 	models.Userdocument	true		"body for Userdocument content"
 // @Success 201 {int} models.Userdocument
 // @Failure 403 body is empty
-// @router / [post]
+// @router /:uid [post]
 func (c *UserdocumentController) Post() {
-	baseidr := "/Users/dengtongtong/workspace/golangworkspace/src/enterbj"
-	filepath := fileutils.MakeTempFilePath(baseidr)
-	fmt.Println("filepath", filepath)
+	//baseidr := "/Users/dengtongtong/workspace/golangworkspace/src/enterbj"
+	//filepath := fileutils.MakeTempFilePath(baseidr)
+	//fmt.Println("filepath", filepath)
+
+	// imgfile, _, _ := c.GetFile("imgdata")
+
+	//c.SaveToFile("imgdata", filepath)
 
 	// c.GetFile
-	// var v models.Userdocument
-	// json.Unmarshal(c.Ctx.Input.RequestBody, &v)
+	var v models.Userdocument
+	fmt.Println(v)
+	fmt.Println(c.Ctx.Input.Data())
+	json.Unmarshal(c.Ctx.Input.RequestBody, &v)
+	fmt.Println(v)
 	// if _, err := models.AddUserdocument(&v); err == nil {
-	// 	c.Ctx.Output.SetStatus(201)
-	// 	c.Data["json"] = v
+	// c.Ctx.Output.SetStatus(201)
+	// c.Data["json"] = v
 	// } else {
-	// 	c.Data["json"] = err.Error()
+	// c.Data["json"] = err.Error()
 	// }
 	// c.ServeJSON()
 }

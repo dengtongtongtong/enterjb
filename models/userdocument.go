@@ -28,11 +28,11 @@ type Userdocument struct {
 	// 行驶证照片存放
 	DrivingLisencePhotoPath string `orm:"size(128);column(driving_lisence_photo_path)"`
 	// 车辆正面照片
-	CarFrontPhotoPath string `orm:"size(128);column(car_front_photo_path)"`
+	CarFrontPhotoPath string `orm:"size(128);column(car_front_poto_path)"`
 	// 驾驶员姓名
 	DriverName string `orm:"size(128);column(driver_name)"`
 	// 驾照号
-	DrivingLisence string `orm:"size"`
+	DrivingLisence string `orm:"size(128);column(driving_lisence)"`
 }
 
 func init() {

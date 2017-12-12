@@ -9,14 +9,6 @@ func init() {
 
 	beego.GlobalControllerRouter["enterbj/controllers:UserdocumentController"] = append(beego.GlobalControllerRouter["enterbj/controllers:UserdocumentController"],
 		beego.ControllerComments{
-			Method: "Post",
-			Router: `/`,
-			AllowHTTPMethods: []string{"post"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["enterbj/controllers:UserdocumentController"] = append(beego.GlobalControllerRouter["enterbj/controllers:UserdocumentController"],
-		beego.ControllerComments{
 			Method: "GetAll",
 			Router: `/`,
 			AllowHTTPMethods: []string{"get"},
@@ -44,6 +36,14 @@ func init() {
 			Method: "Delete",
 			Router: `/:id`,
 			AllowHTTPMethods: []string{"delete"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["enterbj/controllers:UserdocumentController"] = append(beego.GlobalControllerRouter["enterbj/controllers:UserdocumentController"],
+		beego.ControllerComments{
+			Method: "Post",
+			Router: `/:uid`,
+			AllowHTTPMethods: []string{"post"},
 			MethodParams: param.Make(),
 			Params: nil})
 
