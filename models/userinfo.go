@@ -32,7 +32,6 @@ func AddUserinfo(m *Userinfo) (id int64, err error) {
 func GetUserinfoByUId(uid string) (v *Userinfo, err error) {
 	o := orm.NewOrm()
 	v = &Userinfo{Uid: uid}
-	// if err = o.QueryTable(new(Userinfo)).Filter("Id", id).RelatedSel().One(v); err == nil {
 	if err = o.QueryTable(new(Userinfo)).Filter("Uid", uid).RelatedSel().One(v); err == nil {
 		return v, nil
 	}

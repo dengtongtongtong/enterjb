@@ -12,9 +12,9 @@ import (
 type Userdocument struct {
 	Id int64 `orm:"auto"`
 	// 用户提交的文档ID
-	Did string `orm:"size(128);column(documentid)"`
+	Did string `orm:"size(128);column(documentid);unique"`
 	// 用户ID
-	Uid string `orm:"size(128);column(uid)"`
+	Uid string `orm:"size(128);column(uid);unique"`
 	// 汽车品牌型号
 	VehicleBrandType string `orm:"size(128);column(vehicle_brand_type)"`
 	// 车辆注册日期
@@ -33,6 +33,8 @@ type Userdocument struct {
 	DriverName string `orm:"size(128);column(driver_name)"`
 	// 驾照号
 	DrivingLisence string `orm:"size(128);column(driving_lisence)"`
+	// 身份证照片
+	IdcardPhotoPath string `orm:"size(128);column(idcard_photo_path)"`
 }
 
 func init() {
@@ -163,5 +165,54 @@ func DeleteUserdocument(id int64) (err error) {
 }
 
 func UpdateOrInsertUserdocument(m *Userdocument) (err error) {
+	o := orm.NewOrm()
+	_, err = o.Raw(`INSERT INTO userdocument
+		SET
+		documentid = ?,
+		uid = ?,
+		vehicle_brand_type = ?,
+		car_register_time = ?,
+		car_type = ?,
+		carid = ?,
+		engineid = ?,
+		driving_lisence_photo_path = ?,
+		car_front_photo_path = ?,
+		driver_name = ?,
+		driving_lisence = ?,
+		idcard_photo_path = ?
+		ON DUPLICATE KEY
+		UPDATE
+		vehicle_brand_type = if (? != '',?,vehicle_brand_type),
+		car_register_time = if (? != 0,?,car_register_time),
+		car_type = if (? != '',?,car_type),
+		carid = if (? != '',?,carid),
+		engineid = if (? != '',?,engineid),
+		driving_lisence_photo_path = if (? != '',?,driving_lisence_photo_path),
+		car_front_photo_path = if (? != '',?,car_front_photo_path),
+		driver_name = if (? != '',?,driver_name),
+		driving_lisence = if (? != '',?,driving_lisence),
+		idcard_photo_path = if (? != '',?,idcard_photo_path)
+		`, m.Did,
+		m.Uid,
+		m.VehicleBrandType,
+		m.CarRegisterTime,
+		m.Cartype,
+		m.CarID,
+		m.EngineID,
+		m.DrivingLisencePhotoPath,
+		m.CarFrontPhotoPath,
+		m.DriverName,
+		m.DrivingLisence,
+		m.IdcardPhotoPath,
+		m.VehicleBrandType, m.VehicleBrandType,
+		m.CarRegisterTime, m.CarRegisterTime,
+		m.Cartype, m.Cartype,
+		m.CarID, m.CarID,
+		m.EngineID, m.EngineID,
+		m.DrivingLisencePhotoPath, m.DrivingLisencePhotoPath,
+		m.CarFrontPhotoPath, m.CarFrontPhotoPath,
+		m.DriverName, m.DriverName,
+		m.DrivingLisence, m.DrivingLisence,
+		m.IdcardPhotoPath, m.IdcardPhotoPath).Exec()
 	return
 }

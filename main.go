@@ -4,10 +4,21 @@ import (
 	"enterbj/globals"
 	_ "enterbj/routers"
 
+	"github.com/astaxie/beego/orm"
+
 	"github.com/astaxie/beego/config"
 
+	_ "enterbj/models"
+
 	"github.com/astaxie/beego"
+	_ "github.com/go-sql-driver/mysql"
 )
+
+func init() {
+	orm.RegisterDriver("mysql", orm.DRMySQL)
+	orm.RegisterDataBase("default", "mysql", "root:@tcp(127.0.0.1:3306)/test002?charset=utf8")
+	// orm.RunSyncdb("default", true, true)
+}
 
 func main() {
 	// iniconf, err := config.NewConfig()

@@ -2,8 +2,11 @@ package controllers
 
 import (
 	"encoding/json"
+	"enterbj/globals"
 	"enterbj/models"
 	"errors"
+	"gocommon/fileutils"
+	"gocommon/webutils"
 	"strconv"
 	"strings"
 
@@ -32,6 +35,31 @@ func getUserinfo(c *UserdocumentController) (userinfo *models.Userinfo, err erro
 
 func convertParams2Model(c *UserdocumentController) (userdoc models.Userdocument) {
 	userdoc.Uid = c.Ctx.Input.Param(":uid")
+	userdoc.VehicleBrandType = c.GetString("vehicle_brand_type")
+	userdoc.CarRegisterTime, _ = c.GetInt("car_register_time")
+	userdoc.Cartype = c.GetString("car_type")
+	userdoc.CarID = c.GetString("carid")
+	userdoc.EngineID = c.GetString("engineid")
+	userdoc.DriverName = c.GetString("driver_name")
+	userdoc.DrivingLisence = c.GetString("driving_lisence")
+
+	var err error
+	var filepath string
+	filedir := globals.EnterBJConfig.String("BASIC::USER_DOCUMENT_BASEDIR")
+	filepath = fileutils.MakeTempFilePath(filedir)
+	err = c.SaveToFile("driving_lisence_photo", filepath)
+	if err == nil {
+		userdoc.DrivingLisencePhotoPath = filepath
+	}
+	filepath = fileutils.MakeTempFilePath(filedir)
+	err = c.SaveToFile("car_front_photo", filepath)
+	if err == nil {
+		userdoc.CarFrontPhotoPath = filepath
+	}
+	filepath = fileutils.MakeTempFilePath(filedir)
+	if err == nil {
+		userdoc.IdcardPhotoPath = filepath
+	}
 	return userdoc
 }
 
@@ -41,25 +69,28 @@ func convertParams2Model(c *UserdocumentController) (userdoc models.Userdocument
 // @Param   uid   path   string   true   "用户ID"
 // @Param   vehicle_brand_type   formdata   string   false   "汽车品牌型号"
 // @Param   car_register_time    formdata   string   false   "车辆注册日期"
-// @Param   car_type   formdata   string   false       "汽车(品牌)类型"
+// @Param   car_type   formdata   string   false       "号牌类型"
 // @Param   carid   formdata   string  false   "机动车号牌"
 // @Param   engineid   formdata   string  false   "发动机号"
 // @Param   driving_lisence_photo   formdata   sting   false   "行驶证照片"
 // @Param   car_front_photo   formdata   string   false   "车辆正面照片"
+// @Param   idcard_photo   formdata   string   false   "车辆正面照片"
 // @Param   driver_name   formdata   string   false   "驾驶员姓名"
 // @Param   driving_lisence   formdata   string   false   "驾照号"
 // @Success 200 {int} models.Userdocument
 // @Failure 404 body is empty
 // @router /:uid [post]
 func (c *UserdocumentController) Post() {
-	var err error
-	_, err = getUserinfo(c)
-	if err != nil {
-		c.Data["json"] = "abc"
-		return
-	}
+	// var err error
+	// _, err = getUserinfo(c)
+	// if err != nil {
+	// 	c.Data["json"] = webutils.Success(nil)
+	// 	return
+	// }
 	userdocmodel := convertParams2Model(c)
 	_ = models.UpdateOrInsertUserdocument(&userdocmodel)
+	c.Data["json"] = webutils.Success(nil)
+	c.ServeJSON()
 
 	//baseidr := "/Users/dengtongtong/workspace/golangworkspace/src/enterbj"
 	//filepath := fileutils.MakeTempFilePath(baseidr)
