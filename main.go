@@ -10,6 +10,8 @@ import (
 
 	_ "enterbj/models"
 
+	_ "enterbj/tasks"
+
 	"github.com/astaxie/beego"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -21,8 +23,7 @@ func init() {
 }
 
 func main() {
-	// iniconf, err := config.NewConfig()
-
+	// toolbox.StartTask()
 	if beego.BConfig.RunMode == "dev" {
 		globals.EnterBJConfig, _ = config.NewConfig("ini", "conf/enterbj_alpha.conf")
 		beego.BConfig.WebConfig.DirectoryIndex = true
