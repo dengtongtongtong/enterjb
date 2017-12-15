@@ -10,6 +10,10 @@ import (
 	"github.com/astaxie/beego/toolbox"
 )
 
+func enterCarlist() error {
+	return nil
+}
+
 func applyEnterBJ() error {
 	// all 依赖于qs默认limit限制 默认limit=1000
 	fmt.Println("apply enterbj")

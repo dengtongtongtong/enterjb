@@ -10,9 +10,16 @@ import (
 )
 
 type Userinfo struct {
-	Id    int64  `orm:"auto"`
-	Uid   string `orm:"size(128)"`
-	Phone string `orm:"size(128)"`
+	Id        int64  `orm:"auto"`
+	Uid       string `orm:"size(128);column(uid)"`
+	Phone     string `orm:"size(128);column(phone)"`
+	UidByBJJJ string `orm:"size(128);column(uid_by_bjjj)"`
+}
+
+func (u *Userinfo) TableIndex() [][]string {
+	return [][]string{
+		[]string{"UidByBJJJ"},
+	}
 }
 
 func init() {
