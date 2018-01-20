@@ -17,9 +17,13 @@ func CryptoToken(unordered map[string]interface{}, secret string) (signature str
 	ordered, _ := datastructutils.SortMapByStringKey(unordered)
 	var str string
 	for _, x := range ordered {
-		str += x.Key
-		str += x.Value.(string)
+		key := x.(map[string]interface{})["key"]
+		str += key.(string)
+		value := x.(map[string]interface{})["value"]
+		str += value.(string)
 	}
+	fmt.Printf("secret %v\n", secret)
+	fmt.Printf("str %v\n", str)
 	strwithsecret := secret + str + secret
 	bytesignature := md5.Sum([]byte(strwithsecret))
 	signature = fmt.Sprintf("%X", bytesignature)
@@ -27,6 +31,7 @@ func CryptoToken(unordered map[string]interface{}, secret string) (signature str
 }
 
 func CryptoSign(imageid string) string {
+	return ""
 }
 
 func GetToken(userid, timestamp string) string {
