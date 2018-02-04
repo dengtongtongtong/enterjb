@@ -7,15 +7,23 @@ import (
 
 func init() {
 
-	beego.GlobalControllerRouter["enterbj/controllers:UserdocumentController"] = append(beego.GlobalControllerRouter["enterbj/controllers:UserdocumentController"],
+	beego.GlobalControllerRouter["enterbj/controllers:ApplyMentController"] = append(beego.GlobalControllerRouter["enterbj/controllers:ApplyMentController"],
 		beego.ControllerComments{
-			Method: "GetAll",
+			Method: "Post",
+			Router: `/`,
+			AllowHTTPMethods: []string{"post"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["enterbj/controllers:ApplyMentController"] = append(beego.GlobalControllerRouter["enterbj/controllers:ApplyMentController"],
+		beego.ControllerComments{
+			Method: "GetNextUnsigned",
 			Router: `/`,
 			AllowHTTPMethods: []string{"get"},
 			MethodParams: param.Make(),
 			Params: nil})
 
-	beego.GlobalControllerRouter["enterbj/controllers:UserdocumentController"] = append(beego.GlobalControllerRouter["enterbj/controllers:UserdocumentController"],
+	beego.GlobalControllerRouter["enterbj/controllers:ApplyMentController"] = append(beego.GlobalControllerRouter["enterbj/controllers:ApplyMentController"],
 		beego.ControllerComments{
 			Method: "GetOne",
 			Router: `/:id`,
@@ -23,7 +31,7 @@ func init() {
 			MethodParams: param.Make(),
 			Params: nil})
 
-	beego.GlobalControllerRouter["enterbj/controllers:UserdocumentController"] = append(beego.GlobalControllerRouter["enterbj/controllers:UserdocumentController"],
+	beego.GlobalControllerRouter["enterbj/controllers:ApplyMentController"] = append(beego.GlobalControllerRouter["enterbj/controllers:ApplyMentController"],
 		beego.ControllerComments{
 			Method: "Put",
 			Router: `/:id`,
@@ -31,19 +39,11 @@ func init() {
 			MethodParams: param.Make(),
 			Params: nil})
 
-	beego.GlobalControllerRouter["enterbj/controllers:UserdocumentController"] = append(beego.GlobalControllerRouter["enterbj/controllers:UserdocumentController"],
+	beego.GlobalControllerRouter["enterbj/controllers:ApplyMentController"] = append(beego.GlobalControllerRouter["enterbj/controllers:ApplyMentController"],
 		beego.ControllerComments{
 			Method: "Delete",
 			Router: `/:id`,
 			AllowHTTPMethods: []string{"delete"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["enterbj/controllers:UserdocumentController"] = append(beego.GlobalControllerRouter["enterbj/controllers:UserdocumentController"],
-		beego.ControllerComments{
-			Method: "Post",
-			Router: `/:uid`,
-			AllowHTTPMethods: []string{"post"},
 			MethodParams: param.Make(),
 			Params: nil})
 
