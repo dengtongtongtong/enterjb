@@ -163,6 +163,11 @@ func UpdateApplyMentById(m *ApplyMent) (err error) {
 	return
 }
 
+func UpdateApplyMentByImageId(m *ApplyMent) (err error) {
+	o := orm.NewOrm()
+	v := ApplyMent{}
+}
+
 // DeleteApplyMent deletes ApplyMent by Id and returns error if
 // the record to be deleted doesn't exist
 func DeleteApplyMent(id int64) (err error) {

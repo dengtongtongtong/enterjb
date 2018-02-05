@@ -5,6 +5,7 @@ import (
 	"enterbj/models"
 	"fmt"
 	"gocommon/timeutils"
+	"time"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -12,20 +13,40 @@ import (
 type ApplyMentService struct {
 }
 
-func (s *ApplyMentService) getFinalSubmitImageId(data *models.ApplyMent) (imageId string) {
+func (s *ApplyMentService) obtainFinalSubmitImageIdWithSecret(data *models.ApplyMent) (imageId string) {
+	appkey := "0791682354"
+	imageId = appkey + s.obtainFinalSubmitImageId(data) + appkey
+	return imageId
+}
+
+func (s *ApplyMentService) obtainFinalSubmitImageId(data *models.ApplyMent) (imageId string) {
 	imageId = data.Inbjentrancecode + data.Inbjduration + data.Inbjtime + data.UidByBJJJ + data.Engineno + data.Cartypecode + data.Driverlicenseno + data.Carid + data.Timestamp
 	return imageId
 }
 
-func (s *ApplyMentService) generateApplyment(o *orm.Ormer, userInfo *models.UserInfo) (applyment models.ApplyMent) {
+func (s *ApplyMentService) obtainDayStamp() (currentTime string) {
+	t := time.Now()
+	return fmt.Sprintf("%v-%v-%v", t.Year(), int(t.Month()), t.Day())
+}
+
+func (s *ApplyMentService) obtainTimeStamp() (currentTime string) {
+	t := time.Now()
+	return fmt.Sprintf("%v-%v-%v %v:%v:%v", t.Year(), int(t.Month()), t.Day(), t.Hour(), t.Minute(), t.Second())
+}
+
+func (s *ApplyMentService) generateApplyment(o *orm.Ormer, userInfo *models.UserInfo) (applyment models.ApplyMent, err error) {
 	jsonUserInfo, _ := json.Marshal(userInfo)
 	json.Unmarshal(jsonUserInfo, &applyment)
 	applyment.Inbjduration = "02"
-	// applyment.
-	return applyment
+	applyment.Inbjtime = s.obtainDayStamp()
+	applyment.Timestamp = s.obtainTimeStamp()
+	imageId := s.obtainFinalSubmitImageIdWithSecret(&applyment)
+	applyment.ImageId = imageId
+	_, err = (*o).Insert(&applyment)
+	return applyment, err
 }
 
-func (s *ApplyMentService) ObtainUnsignedApplyment() (applyMent string) {
+func (s *ApplyMentService) ObtainUnsignedApplyment() (applyment models.ApplyMent) {
 	timeCurrent := timeutils.CurrentTimestamp()
 	o := orm.NewOrm()
 	o.Begin()
@@ -60,7 +81,11 @@ func (s *ApplyMentService) ObtainUnsignedApplyment() (applyMent string) {
 	`, timeCurrent, timeCurrent).QueryRow(&userInfo)
 	fmt.Println("userinfo", userInfo.UidByBJJJ)
 	if err != nil {
-		o.Rollback()
+		switch err {
+		case orm.ErrNoRows:
+			applyment = models.ApplyMent{}
+			return applyment
+		}
 	}
 	_, err = o.Raw(`update
 			apply_status
@@ -71,8 +96,21 @@ func (s *ApplyMentService) ObtainUnsignedApplyment() (applyMent string) {
 	if err != nil {
 		o.Rollback()
 	}
-	applyment := s.generateApplyment(&o, &userInfo)
-	fmt.Println("applyment Engineno", applyment.Engineno)
+	applyment, err = s.generateApplyment(&o, &userInfo)
 	o.Commit()
-	return "hello dengtongtong"
+	return applyment
+}
+
+func (s *ApplyMentService) generateSignedApplyment(applyment *models.ApplyMent) {
+	o := orm.NewOrm()
+	v := models.ApplyMent{
+		ImageId: applyment.ImageId,
+	}
+	if err = o.Read(&v); err == nil {
+		var num int64
+		if num, err = o.Update(m); err == nil {
+			fmt.Println("Number of records updated in database:", num)
+		}
+	}
+	return
 }

@@ -79,7 +79,7 @@ func (c *ApplyMentController) GetOne() {
 func (c *ApplyMentController) GetNextUnsigned() {
 	serviceApply := service.ApplyMentService{}
 	applyment := serviceApply.ObtainUnsignedApplyment()
-	c.Data["json"] = webutils.Success(applyment)
+	c.Data["json"] = webutils.Success(applyment.ImageId)
 	c.ServeJSON()
 }
 
